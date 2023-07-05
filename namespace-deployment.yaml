@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deployment-nginx
+  name: testspace-deploy
+  namespace: testspace
 spec:
   replicas: 4
   selector:
@@ -18,4 +19,3 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
-          name: help
