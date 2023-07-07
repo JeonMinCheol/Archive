@@ -3,29 +3,19 @@ kind: ServiceMonitor
 metadata:
   annotations:
     meta.helm.sh/release-namespace: monitoring
-  generation: 3
-  labels:
-    app: kube-prometheus-my-manager
-    app.kubernetes.io/instance: prometheus
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/part-of: kube-prometheus-stack
-    app.kubernetes.io/version: 47.3.0
-    chart: kube-prometheus-stack-47.3.0
-    heritage: Helm
-    release: prometheus
-  name: prometheus-kube-my-manager
+  name: nginx
   namespace: monitoring
-  resourceVersion: "49312"
+  labels:
+    app: nginx
+    release: prometheus
 spec:
   endpoints:
-  - enableHttp2: true
+  - port: nginx-port
     path: /metrics
-    port: help
   namespaceSelector:
     matchNames:
     - monitoring
   selector:
     matchLabels:
-      app: kube-prometheus-my-manager
+      app: nginx
       release: prometheus
-      self-monitor: "true"
