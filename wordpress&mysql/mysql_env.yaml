@@ -1,0 +1,18 @@
+# MY_SQL_ROOT_PASSWORD라는 환경 변수에 mysql-password라는 시크릿에서 password 라는 키의 value 값을 집어 넣음
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  containers:
+  - image: mysql
+    name: mysql
+    env:
+    - name: MY_SQL_ROOT_PASSWORD 
+      valueFrom:
+        secretKeyRef:
+          name: mysql-password
+          key: password
+    
