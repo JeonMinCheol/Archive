@@ -6,10 +6,9 @@ metadata:
     app: nginx
     release: prometheous
 spec:
-    ports:
+  ports:
     - name: nginx-port
-      port: 8080
-      targetPort: 80
-    selector:
-      app: nginx # nginx 디플로이먼트만 바라봄
-    type: NodePort
+      port: 80
+  selector:
+    app: nginx # nginx 디플로이먼트만 바라봄
+  type: NodePort
