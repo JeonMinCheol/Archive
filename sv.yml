@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name:  sv
+spec:
+  selector:
+    app:  wordpress
+  type:  NodePort
+  ports:
+  - name:  nginx
+    port:  80 # 서비스 내부 IP의 포트
+    targetPort:  80 # 타겟으로 하는 포드의 포트 

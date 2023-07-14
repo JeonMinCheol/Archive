@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: fluentd-elasticsearch
-          command: ["/bin/sh", "-ec", "while :; do echo 'Hello world'; sleep 5 ; done"]
+          command: ["/bin/sh", "-ec", "while :; do echo 'listening'; sleep 5 ; done"]
           image: fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch
           env:
           - name: testenv

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mypv
+spec:
+  capacity:
+    storage: 2Gi # 스토리지 용량 2기가
+  volumeMode: Filesystem # 볼륨을 파일 시스템 형식으로 사용, raw도 존재
+  accessModes: # 볼륨의 읽기/쓰기 옵션을 설정, ReadOnlyMany, ReadWriteMany도 존재, once, many: 노드 하나 또는 여러개와 마운트 
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete # 초기화 옵션
+  storageClassName: slow # storageClassName이 동일한 pvc와만 연결됨
+  hostPath:
+    path: /run/desktop/mnt/host/c/test

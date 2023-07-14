@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: po
+  labels:
+    app: nginx
+spec:
+  containers:
+  - name: nginx  
+    image: nginx
+    ports:
+    - containerPort: 80
+      name: nginx
+  - name: ubuntu  
+    command: ["/bin/sh", "-ec", "while :; do echo 'listening'; sleep 5 ; done"]
+    image: ubuntu
+    ports:
+    - containerPort: 81
+      name: ubuntu

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  nfs-volume
+  labels:
+    app:  nfs-volume
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nfs-volume
+  template:
+    metadata:
+      labels:
+        app:  nfs-volume
+    spec:
+      containers:
+      - image:  nginx
+        name:  nfs-volume
+        ports:
+        - containerPort:  8080
+          name:  nfs-volume
+        volumeMounts:
+        - mountPath: /test-nfs
+          name: nfs-vol
+      volumes:
+      - name: nfs-vol
+        nfs:
+          server: 10.1.1.146
+          path: /

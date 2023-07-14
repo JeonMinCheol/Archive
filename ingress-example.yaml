@@ -12,6 +12,6 @@ spec:
         pathType: Prefix 
         backend:
           service:
-            name: test # /testpath에서 들어온 요청을 test라는 서비스의
+            name: kubernetes-dashboard # /testpath에서 들어온 요청을 kubernetes-dashboard라는 서비스의
             port:
-              number: 80 # 80번 포트로 전달
+              number: 32262 # 80번 포트로 전달
