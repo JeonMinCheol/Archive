@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingeress
+spec:
+  ingressClassName: nginx-example
+  rules:
+  - host: asdf.example.com # 해당 도메인으로 접근하는 요청에 대해 처리
+    http:
+      paths: 
+      - path: /testpath # 해당 경로에 들어온 요청을 어느 서비스에 전달할 것인지 정한다. /testpath에서 들어온 요청을 backend에 정의된 서비스로 전달
+        pathType: Prefix 
+        backend:
+          service:
+            name: kubernetes-dashboard # /testpath에서 들어온 요청을 kubernetes-dashboard라는 서비스의
+            port:
+              number: 32262 # 80번 포트로 전달

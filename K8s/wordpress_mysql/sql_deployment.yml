@@ -1,0 +1,49 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name:  mysql-service
+spec:
+  selector:
+    app:  mysql
+  type: ClusterIP 
+  ports:
+  - name:  sql-port
+    port:  3306
+    targetPort: 3306
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+#  strategy:
+#    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql:5.6 # 꼭 5.6버전 사용할 것, 버전 따로 입력 안했더니 작동안됨. 아 개빡치네 진짜
+        name: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-password 
+              key: password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mypvc

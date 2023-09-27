@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd-elasticsearch
+  namespace: kube-system
+  labels:
+    k8s-app: fluentd-logging
+spec:
+  selector:
+    matchLabels:
+      name: fluentd-elasticsearch
+  updateStrategy:
+    type: RollingUpdate # onDelete와 RollingUpdate 중 하나를 선택, onDelete는 직접 파드를 지워야 업데이트가 이루어짐.
+    rollingUpdate:      # RollingUpdate는 모든 포드가 한꺼번에 변경되는 것이 아니라 지정한 개수만큼 이전 파드를 삭제하고 새 파드를 실행
+      maxUnavailable: 3 # 한번에 삭제할 파드의 개수 (기본값 1)
+  template:             
+    metadata:
+      labels:
+        name: fluentd-elasticsearch
+    spec:
+      containers:
+        - name: fluentd-elasticsearch
+          command: ["/bin/sh", "-ec", "while :; do echo 'listening'; sleep 5 ; done"]
+          image: fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch
+          env:
+          - name: testenv
+            value: value

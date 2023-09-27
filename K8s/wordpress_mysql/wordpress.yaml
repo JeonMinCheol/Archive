@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: wordpress
+
+  template:
+    metadata:
+      name: wordpress
+      labels:
+        app: wordpress
+
+    spec:
+      containers:
+        - name: wordpress
+          image: wordpress
+
+          resources: # pod의 리소스 제한
+            requests: # 최소 요구량
+              cpu: "100m" # cpu 0.1개
+              memory: 64Mi # 2^26 byte
+            limits: # 최대 요구량
+              cpu: "300m" # cpu 0.3개
+              memory: 128Mi # 2^27 byte
+
+          ports:
+          - containerPort: 80
+            name: wordpress-port
+
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: 10.97.242.144:3306 # mysql 서비스의 이름 or 서비스 IP:PORT가 들어가야 한다.
+            - name: WORDPRESS_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: wordpress 
+                  key: user
+            - name: WORDPRESS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-password
+                  key: password
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  selector:
+    app: wordpress
+      
+  ports:
+    - name: wordpress-port
+      port: 80
+      nodePort: 32222
+      targetPort: 80
+  type: NodePort
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: wordpress
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: wordpress
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80

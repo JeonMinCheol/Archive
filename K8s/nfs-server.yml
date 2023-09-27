@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-server
+  labels:
+    app: nfs-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nfs-server
+  template:
+    metadata:
+      labels:
+        app: nfs-server
+    spec:
+      containers:
+      - name: nfs-server
+        image: nginx
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 2049
+          name: nfs
+        - containerPort: 20048
+          name: rpcbind
+        securityContext:
+          privileged: true
+        volumeMounts:
+          - name:  hostpath-vol
+            mountPath:  /mount_folder
+      volumes:
+        - name:  hostpath-vol
+          hostPath:
+            path: /run/desktop/mnt/host/c/test
+            type: Directory

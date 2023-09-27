@@ -1,0 +1,25 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: myapp
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: myapp # myapp 디플로이먼트의 오토스케일러
+  minReplicas: 1 # 최소 개수 1개
+  maxReplicas: 3 # 최대 개수 3개
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu 
+      target:
+        type: Utilization
+        averageUtilization: 50 # 목표 CPU 사용률
+
+# 파드의 개수 = (현재 파드의 CPU 사용률의 합 / 목표 CPU 사용률)을 올림한 값
+# 파드 2개가 있다고 가정할 때 사용률이 각각 50, 80이면 130 / 50 = 2.17 이므로 올림하면 대상 파드 개수는 3이다.
+
+# kubectl get hpa 했을 때 현재 리소스 사용률이 unknown이면 해당 kind의 .spec.template.containers[].resources.requests 에 리소스 값이 제대로 설정되었는지 확인할 것 
+

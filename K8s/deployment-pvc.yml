@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      editor: vscode
+  template:
+    metadata:
+      labels:
+        editor: vscode
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name:  simple-volume
+          mountPath: /simple
+      volumes:
+      - name: simple-volume
+        persistentVolumeClaim:
+          claimName: mypvc # mypvc pvc와 연결

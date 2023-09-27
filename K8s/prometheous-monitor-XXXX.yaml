@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  annotations:
+    meta.helm.sh/release-namespace: monitoring
+  name: nginx
+  namespace: monitoring
+  labels:
+    app: nginx
+    release: prometheus
+spec:
+  endpoints:
+  - port: nginx-port
+    path: /metrics
+  namespaceSelector:
+    matchNames:
+    - monitoring
+  selector:
+    matchLabels:
+      app: nginx
+      release: prometheus
